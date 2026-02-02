@@ -1,69 +1,75 @@
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Juego {
 
+	// El "JEFE" (Main) solo coordina, no hace el trabajo sucio
 	public static void main(String[] args) {
-
-		// PREPARACIÓN (Herramientas y Variables Iniciales)
+		
 		Scanner entrada = new Scanner(System.in);
-		Random generador = new Random();
-		int puntaje = 0; // Aquí guardaremos los aciertos
-		int totalRondas = 5; // El juego durará 5 preguntas
-
-		System.out.println("*********************************************");
-		System.out.println("* SISTEMA DE ENTRENAMIENTO DE HÉROES     *");
-		System.out.println("*********************************************");
-		System.out.println("¡Bienvenido! Tienes " + totalRondas + " misiones por delante.");
-		System.out.println("---------------------------------------------");
-
-		// EL BUCLE (Aquí empieza la repetición)
-		// "int i = 1" -> Empezamos en la ronda 1
-		// "i <= totalRondas" -> Mientras no pasemos la ronda 5...
-		// "i++" -> Al terminar una ronda, suma 1 al contador
-
+		int puntaje = 0;
+		int totalRondas = 5;
+		
+		imprimirEncabezado(); // El Jefe manda a imprimir el título
+		
 		for (int i = 1; i <= totalRondas; i++) {
-
-			// 1. Generar nuevos enemigos (números) en cada vuelta
-			int numero1 = generador.nextInt(10) + 1;
-			int numero2 = generador.nextInt(10) + 1;
+			
+			System.out.println("\nRONDA " + i + ":");
+			
+			// 1. El Jefe pide números a los ayudantes
+			int numero1 = generarNumeroAleatorio();
+			int numero2 = generarNumeroAleatorio();
 			int sumaCorrecta = numero1 + numero2;
-
-			// 2. Mostrar la pregunta actual
-			System.out.println("\nRONDA " + i + ":"); // \n es un salto de línea
+			
+			// 2. Interacción
 			System.out.println("¿Cuánto es " + numero1 + " + " + numero2 + "?");
-			System.out.print("Tu respuesta: "); // print (sin ln) deja escribir al lado
-
-			// 3. Capturar respuesta
+			System.out.print("Tu respuesta: ");
 			int respuestaUsuario = entrada.nextInt();
-
-			// 4. Verificar (El Juez)
-
-			if (respuestaUsuario == sumaCorrecta) {
-				System.out.println(">>> ¡CORRECTO! Enemigo derrotado.");
-				puntaje++; // Sumamos 1 punto al marcador
-			} else {
-				System.out.println(">>> FALLASTE. La respuesta era " + sumaCorrecta);
-				// Aquí no sumamos puntos
+			
+			// 3. El Jefe pregunta al juez si ganó
+			boolean gano = evaluarRespuesta(respuestaUsuario, sumaCorrecta);
+			
+			if (gano) {
+				puntaje++;
 			}
-			// Al llegar a esta llave }, el programa sube automáticamente al inicio del
-			// 'for'
 		}
-		// CIERRE (Resultados finales)
-		System.out.println("---------------------------------------------");
-		System.out.println("ENTRENAMIENTO FINALIZADO");
-		System.out.println("Puntaje Final: " + puntaje + " de " + totalRondas);
-
-		if (puntaje == 5) {
-			System.out.println("RANGO: ¡SUPERHÉROE LEGENDARIO! 🌟");
-		} else if (puntaje >= 3) {
-			System.out.println("RANGO: Héroe en entrenamiento. ¡Bien hecho!");
-		} else {
-			System.out.println("RANGO: Necesitas practicar más, recluta.");
-		}
-
+		
+		mostrarResultadoFinal(puntaje, totalRondas);
 		entrada.close();
 	}
-
+	
+	// --- AQUI ESTÁN LOS AYUDANTES (MÉTODOS) ---
+	
+	// Ayudante 1: Solo sabe imprimir cosas bonitas
+	public static void imprimirEncabezado() {
+		System.out.println("*********************************************");
+		System.out.println("* SISTEMA DE ENTRENAMIENTO DE HÉROES v2.0 *");
+		System.out.println("*********************************************");
+	}
+	
+	// Ayudante 2: Solo sabe generar un número del 1 al 10
+	public static int generarNumeroAleatorio() {
+		Random generador = new Random();
+		return generador.nextInt(10) + 1;
+	}
+	
+	// Ayudante 3: El Juez. Decide si está bien o mal y avisa.
+	public static boolean evaluarRespuesta(int usuario, int correcta) {
+		if (usuario == correcta) {
+			System.out.println(">>> ¡CORRECTO! Enemigo derrotado.");
+			return true; // Devuelve VERDADERO (ganó punto)
+		} else {
+			System.out.println(">>> FALLASTE. La respuesta era " + correcta);
+			return false; // Devuelve FALSO (no ganó punto)
+		}
+	}
+	
+	// Ayudante 4: Da el veredicto final
+	public static void mostrarResultadoFinal(int puntaje, int total) {
+		System.out.println("---------------------------------------------");
+		System.out.println("Puntaje Final: " + puntaje + " de " + total);
+		if (puntaje == total) System.out.println("RANGO: LEGENDARIO 🌟");
+		else if (puntaje >= total/2) System.out.println("RANGO: Héroe en entrenamiento.");
+		else System.out.println("RANGO: Necesitas practicar más.");
+	}
 }
