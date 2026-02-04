@@ -15,4 +15,9 @@ public class Heroe extends Personaje {
 		this.salud += 20;
 		if (this.salud > 100) this.salud = 100;
 	}
+//@Override es una etiqueta que avisa: "Estoy reescribiendo el método de mi padre"
+	@Override
+	public void presentarse() {
+		System.out.println("HEROE: ¡Soy " + this.nombre + " y lucho por la justicia!");
+	}
 }

@@ -16,6 +16,13 @@ public class Juego {
 		// 2. Crear al Jefe Final (Un Orco con mucha vida)
 		Enemigo jefe = new Enemigo("Orco Matemático", 150, 25);
 
+		// POLIMORFISMO EN ACCIÓN:
+		// Llamamos al MISMO método (.presentarse), pero actúan diferente.
+		System.out.println("\n--- PRESENTACIÓN ---");
+		jugador.presentarse();
+		jefe.presentarse();
+		System.out.println("--------------------\n");
+
 		System.out.println("¡CUIDADO! Un " + jefe.getNombre() + " salvaje ha aparecido.");
 		System.out.println("Tiene " + jefe.getSalud() + " de vida y " + jefe.fuerza + " de ataque.");
 

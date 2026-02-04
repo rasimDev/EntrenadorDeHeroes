@@ -15,4 +15,9 @@ public class Enemigo extends Personaje {
 		System.out.println(">>> El " + this.nombre + " ataca a " + victima.nombre + " con " + this.fuerza + " de fuerza.");
 		victima.recibirDanio(this.fuerza);
 	}
+
+	@Override
+	public void presentarse() {
+		System.out.println("ENEMIGO: Grrr... Soy " + this.nombre + ". ¡Prepárate a morir!");
+	}
 }
