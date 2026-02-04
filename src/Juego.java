@@ -16,16 +16,16 @@ public class Juego {
 		// 2. Crear al Jefe Final (Un Orco con mucha vida)
 		Enemigo jefe = new Enemigo("Orco Matemático", 150, 25);
 
-		System.out.println("¡CUIDADO! Un " + jefe.nombre + " salvaje ha aparecido.");
-		System.out.println("Tiene " + jefe.salud + " de vida y " + jefe.fuerza + " de ataque.");
+		System.out.println("¡CUIDADO! Un " + jefe.getNombre() + " salvaje ha aparecido.");
+		System.out.println("Tiene " + jefe.getSalud() + " de vida y " + jefe.fuerza + " de ataque.");
 
 		// 3. EL BUCLE DE COMBATE (While)
 		// "Mientras el jugador viva Y el jefe viva... pelean"
 		while (jugador.estaVivo() && jefe.estaVivo()) {
 
 			System.out.println("\n--- ESTADO DE BATALLA ---");
-			System.out
-					.println(jugador.nombre + " HP: " + jugador.salud + "  VS  " + jefe.nombre + " HP: " + jefe.salud);
+			System.out.println(jugador.getNombre() + " HP: " + jugador.getSalud() + "  VS  " + jefe.getNombre()
+					+ " HP: " + jefe.getSalud());
 
 			int numero1 = generarNumeroAleatorio();
 			int numero2 = generarNumeroAleatorio();
@@ -49,9 +49,9 @@ public class Juego {
 		// 4. RESULTADO FINAL
 		System.out.println("\n---------------------------------------------");
 		if (jugador.estaVivo()) {
-			System.out.println("¡VICTORIA LEGENDARIA! Has derrotado al " + jefe.nombre);
+			System.out.println("¡VICTORIA LEGENDARIA! Has derrotado al " + jefe.getNombre());
 		} else {
-			System.out.println("GAME OVER... El " + jefe.nombre + " te ha aplastado.");
+			System.out.println("GAME OVER... El " + jefe.getNombre() + " te ha aplastado.");
 		}
 
 		entrada.close();
@@ -85,12 +85,12 @@ public class Juego {
 		System.out.println("---------------------------------------------");
 
 		if (heroe.estaVivo()) {
-			System.out.println("¡VICTORIA! " + heroe.nombre + " ha sobrevivido.");
-			System.out.println("Salud restante: " + heroe.salud);
+			System.out.println("¡VICTORIA! " + heroe.getNombre() + " ha sobrevivido.");
+			System.out.println("Salud restante: " + heroe.getSalud());
 			System.out.println("Enemigos derrotados: " + puntaje);
 		} else {
 			System.out.println("GAME OVER.");
-			System.out.println(heroe.nombre + " ha caído en batalla valientemente.");
+			System.out.println(heroe.getNombre() + " ha caído en batalla valientemente.");
 		}
 	}
 }
