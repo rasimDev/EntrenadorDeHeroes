@@ -6,54 +6,54 @@ public class Juego {
 	public static void main(String[] args) {
 
 		Scanner entrada = new Scanner(System.in);
-
 		imprimirEncabezado();
 
-		// 1. NACIMIENTO: Instanciamos el objeto
+		// 1. Crear al Héroe
 		System.out.print("Nombre de tu Héroe: ");
 		String nombre = entrada.next();
 		Heroe jugador = new Heroe(nombre);
 
-		System.out.println(">>> Héroe creado: " + jugador.nombre + " (HP: " + jugador.salud + ")");
+		// 2. Crear al Jefe Final (Un Orco con mucha vida)
+		Enemigo jefe = new Enemigo("Orco Matemático", 150, 25);
 
-		int puntaje = 0;
-		int totalRondas = 10;
+		System.out.println("¡CUIDADO! Un " + jefe.nombre + " salvaje ha aparecido.");
+		System.out.println("Tiene " + jefe.salud + " de vida y " + jefe.fuerza + " de ataque.");
 
-		// 2. EL CICLO DE BATALLA
-		for (int i = 1; i <= totalRondas; i++) {
+		// 3. EL BUCLE DE COMBATE (While)
+		// "Mientras el jugador viva Y el jefe viva... pelean"
+		while (jugador.estaVivo() && jefe.estaVivo()) {
 
-			// Si el héroe muere en medio de la batalla, se acaba el bucle
-			if (!jugador.estaVivo()) {
-				break;
-			}
-
-			System.out.println("\n--- RONDA " + i + " --- (Salud actual: " + jugador.salud + ")");
+			System.out.println("\n--- ESTADO DE BATALLA ---");
+			System.out
+					.println(jugador.nombre + " HP: " + jugador.salud + "  VS  " + jefe.nombre + " HP: " + jefe.salud);
 
 			int numero1 = generarNumeroAleatorio();
 			int numero2 = generarNumeroAleatorio();
 			int sumaCorrecta = numero1 + numero2;
 
-			System.out.println("Enemigo aparece: ¿Cuánto es " + numero1 + " + " + numero2 + "?");
-			System.out.print("Ataque: ");
+			System.out.println("Para atacar, resuelve: " + numero1 + " + " + numero2);
+			System.out.print("Respuesta: ");
 			int respuestaUsuario = entrada.nextInt();
 
-			boolean gano = evaluarRespuesta(respuestaUsuario, sumaCorrecta);
-
-			if (gano) {
-				puntaje++;
-				// Opcional: ¡Podrías curarlo si acierta!
-				// jugador.curarse();
+			if (evaluarRespuesta(respuestaUsuario, sumaCorrecta)) {
+				// Si aciertas, TÚ atacas al Jefe
+				System.out.println("¡ZAS! Le pegas al monstruo.");
+				jefe.recibirDanio(30); // Le quitamos 30 de vida
 			} else {
-				// AQUÍ ESTÁ LA CLAVE POO:
-				// No restamos vidas manualmente. Le decimos al objeto que reciba daño.
-				// 34 de daño significa que con 3 golpes (34+34+34 > 100) muere.
-				jugador.recibirDanio(34);
-				System.out.println(">>> ¡El héroe ha sido herido!");
+				// Si fallas, el Jefe interactúa contigo y te baja vida
+				System.out.println("¡Fallaste! Quedaste expuesto.");
+				jefe.atacar(jugador); // <--- INTERACCIÓN DE OBJETOS
 			}
 		}
 
-		// 3. FINAL DEL JUEGO
-		mostrarResultadoFinal(puntaje, totalRondas, jugador); // Pasamos el OBJETO entero
+		// 4. RESULTADO FINAL
+		System.out.println("\n---------------------------------------------");
+		if (jugador.estaVivo()) {
+			System.out.println("¡VICTORIA LEGENDARIA! Has derrotado al " + jefe.nombre);
+		} else {
+			System.out.println("GAME OVER... El " + jefe.nombre + " te ha aplastado.");
+		}
+
 		entrada.close();
 	}
 
