@@ -1,34 +1,18 @@
-public class Enemigo {
+public class Enemigo extends Personaje {
 
-	// Atributos
-	String nombre;
-	int salud;
+	// Este atributo es exclusivo del Enemigo
 	int fuerza;
-
-	// Constructor
+	
 	public Enemigo(String nombre, int salud, int fuerza) {
-		this.nombre = nombre;
-		this.salud = salud;
+		// Pasamos nombre y salud al Padre
+		super(nombre, salud);
+		// Nos encargamos de la fuerza nosotros mismos
 		this.fuerza = fuerza;
 	}
-
-	// Método para recibir daño (igual que el héroe)
-	public void recibirDanio(int danio) {
-		this.salud = this.salud - danio;
-		if (this.salud < 0)
-			this.salud = 0;
-	}
-
-	// --- AQUÍ ESTÁ LA MAGIA DE LA INTERACCIÓN ---
-	// Este método recibe un OBJETO Heroe completo como parámetro.
-	// El enemigo "lee" al héroe y modifica su salud.
+	
+	// Método exclusivo del Enemigo
 	public void atacar(Heroe victima) {
-		System.out.println(
-				">>> El " + this.nombre + " ataca a " + victima.nombre + " con " + this.fuerza + " de fuerza.");
+		System.out.println(">>> El " + this.nombre + " ataca a " + victima.nombre + " con " + this.fuerza + " de fuerza.");
 		victima.recibirDanio(this.fuerza);
-	}
-
-	public boolean estaVivo() {
-		return this.salud > 0;
 	}
 }
