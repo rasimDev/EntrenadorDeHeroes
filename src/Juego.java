@@ -4,80 +4,93 @@ import java.util.Scanner;
 public class Juego {
 
 	public static void main(String[] args) {
-		
+
 		Scanner entrada = new Scanner(System.in);
-		int puntaje = 0;
-		int totalRondas = 10; // ¡Aumentamos las rondas para hacerlo más difícil!
-		int vidas = 3; // Empezamos con 3 corazones ❤️❤️❤️
-		
+
 		imprimirEncabezado();
-		
-		// El bucle ahora tiene dos condiciones de salida: acabar las rondas O morir
+
+		// 1. NACIMIENTO: Instanciamos el objeto
+		System.out.print("Nombre de tu Héroe: ");
+		String nombre = entrada.next();
+		Heroe jugador = new Heroe(nombre);
+
+		System.out.println(">>> Héroe creado: " + jugador.nombre + " (HP: " + jugador.salud + ")");
+
+		int puntaje = 0;
+		int totalRondas = 10;
+
+		// 2. EL CICLO DE BATALLA
 		for (int i = 1; i <= totalRondas; i++) {
-			
-			System.out.println("\n--- RONDA " + i + " --- (Vidas: " + vidas + ")");
-			
+
+			// Si el héroe muere en medio de la batalla, se acaba el bucle
+			if (!jugador.estaVivo()) {
+				break;
+			}
+
+			System.out.println("\n--- RONDA " + i + " --- (Salud actual: " + jugador.salud + ")");
+
 			int numero1 = generarNumeroAleatorio();
 			int numero2 = generarNumeroAleatorio();
 			int sumaCorrecta = numero1 + numero2;
-			
-			System.out.println("¿Cuánto es " + numero1 + " + " + numero2 + "?");
-			System.out.print("Respuesta: ");
+
+			System.out.println("Enemigo aparece: ¿Cuánto es " + numero1 + " + " + numero2 + "?");
+			System.out.print("Ataque: ");
 			int respuestaUsuario = entrada.nextInt();
-			
+
 			boolean gano = evaluarRespuesta(respuestaUsuario, sumaCorrecta);
-			
+
 			if (gano) {
 				puntaje++;
+				// Opcional: ¡Podrías curarlo si acierta!
+				// jugador.curarse();
 			} else {
-				vidas--; // Restamos una vida
-				System.out.println(">>> ¡CUIDADO! Te quedan " + vidas + " vidas.");
-				
-				if (vidas == 0) {
-					System.out.println(">>> ☠️ SE TE ACABARON LAS VIDAS ☠️");
-					break; // <--- ESTO ROMPE EL BUCLE INMEDIATAMENTE
-				}
+				// AQUÍ ESTÁ LA CLAVE POO:
+				// No restamos vidas manualmente. Le decimos al objeto que reciba daño.
+				// 34 de daño significa que con 3 golpes (34+34+34 > 100) muere.
+				jugador.recibirDanio(34);
+				System.out.println(">>> ¡El héroe ha sido herido!");
 			}
 		}
-		
-		mostrarResultadoFinal(puntaje, totalRondas, vidas); // Pasamos 'vidas' para saber si murió
+
+		// 3. FINAL DEL JUEGO
+		mostrarResultadoFinal(puntaje, totalRondas, jugador); // Pasamos el OBJETO entero
 		entrada.close();
 	}
-	
-	// --- AYUDANTES ---
-	
+
+	// --- AYUDANTES ACTUALIZADOS ---
+
 	public static void imprimirEncabezado() {
 		System.out.println("*********************************************");
-		System.out.println("* ENTRENAMIENTO DE HÉROES: SURVIVAL     *");
+		System.out.println("* RPG MATH: JAVA EDITION       *");
 		System.out.println("*********************************************");
-		System.out.println("Reglas: 10 Rondas. Si fallas 3 veces... GAME OVER.");
 	}
-	
+
 	public static int generarNumeroAleatorio() {
 		Random generador = new Random();
-		return generador.nextInt(20) + 1; // Ahora números hasta el 20 (más difícil)
+		return generador.nextInt(20) + 1;
 	}
-	
+
 	public static boolean evaluarRespuesta(int usuario, int correcta) {
 		if (usuario == correcta) {
-			System.out.println(">>> ¡Bien hecho!");
+			System.out.println(">>> ¡GOLPE CRÍTICO AL ENEMIGO!");
 			return true;
 		} else {
-			System.out.println(">>> ¡ERROR! La respuesta era " + correcta);
+			System.out.println(">>> FALLASTE. El enemigo contraataca.");
 			return false;
 		}
 	}
-	
-	// Hemos actualizado este método para recibir las vidas también
-	public static void mostrarResultadoFinal(int puntaje, int total, int vidas) {
+
+	// Fíjate que aquí ahora recibimos un objeto de tipo 'Heroe'
+	public static void mostrarResultadoFinal(int puntaje, int total, Heroe heroe) {
 		System.out.println("---------------------------------------------");
-		
-		if (vidas == 0) {
-			System.out.println("RESULTADO: Misión Fallida (Game Over)");
-			System.out.println("Lograste " + puntaje + " aciertos antes de caer.");
+
+		if (heroe.estaVivo()) {
+			System.out.println("¡VICTORIA! " + heroe.nombre + " ha sobrevivido.");
+			System.out.println("Salud restante: " + heroe.salud);
+			System.out.println("Enemigos derrotados: " + puntaje);
 		} else {
-			System.out.println("¡MISIÓN CUMPLIDA! Sobreviviste.");
-			System.out.println("Puntaje Final: " + puntaje + " de " + total);
+			System.out.println("GAME OVER.");
+			System.out.println(heroe.nombre + " ha caído en batalla valientemente.");
 		}
 	}
 }
